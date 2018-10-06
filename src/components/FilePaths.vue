@@ -40,26 +40,14 @@
 <script>
 export default {
   name: "FilePaths",
-  created: function() {
-    // `this` points to the vm instance
-  },
+  created: function() {},
   methods: {
-    setPaths: function() {
-      //alert(this.$settings.test)
-      // this.$snackbar.open({
-      // message: this.$settings.test,
-      // type: 'is-info',
-      // position: 'is-top',
-      // })
-
-      this.$settings.activeState = "ExportType";
-      console.log(this.$settings.activeState);
+    setPaths: function() {  
+	  this.$router.push({ name: 'ExportList'})
     },
 
     browsePath: function() {
       alert("browsing Paths");
-
-      //We should save this somehow
     }
   }
 };
