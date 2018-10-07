@@ -1,0 +1,20 @@
+.logo {
+	font-size: 500%;
+  
+	> span {
+	  width: 50%;
+	  display: inline-block;
+	  margin: 0px;
+	  padding: 0px;
+	}
+    &__box {
+      background: $color-shadeDark;
+      color: $color-textLight;
+      text-align: right;
+    }
+    &__cutter {
+      background: $color-accentLight;
+      color: $color-textDark;
+      text-align: left;
+    }
+  }
