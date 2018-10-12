@@ -1,10 +1,10 @@
 .ExportList{
-	.column {
-		height: 5em;
-		background: $color-main;
-		color: $color-textLight;
-		padding: 1.25em;
-		margin: 1em;
-		font-size: 170%;
-	  }
+	.progress{
+		margin: 1em 0;
+		height: 2em;
+	}
+
+	table .selected{
+		background-color: $info !important;
+	}
 }

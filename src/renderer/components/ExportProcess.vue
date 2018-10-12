@@ -1,5 +1,5 @@
 <template>
-  <div class="ExportType">
+  <div class="ExportType container">
     	<section class="hero is-primary">
           <div class="hero-body">
             <div class="container">
@@ -45,16 +45,6 @@ export default {
   },
   methods: {
     getXML: function() {
-		var convert = require('xml-js');
-		// var VueResource = require('vue-resource');
-
-		// this.$http.get('./static/test.xml').then((response) => {
-		// 	console.log(response.body);
-
-		// 	var data = convert.xml2js(response.body);
-		// 	console.warn(data)
-		// })
-
 		this.drawTable();
     },
 
@@ -65,5 +55,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
 </style>

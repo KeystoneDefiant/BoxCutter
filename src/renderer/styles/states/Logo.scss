@@ -8,13 +8,13 @@
 	  padding: 0px;
 	}
     &__box {
-      background: $color-shadeDark;
-      color: $color-textLight;
+      background: $secondary;
+      color: $primary;
       text-align: right;
     }
     &__cutter {
-      background: $color-accentLight;
-      color: $color-textDark;
+      background: $primary;
+      color: $secondary;
       text-align: left;
     }
   }

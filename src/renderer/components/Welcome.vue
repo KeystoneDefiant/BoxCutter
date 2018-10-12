@@ -1,5 +1,5 @@
 <template>
-	<div class="welcome">
+	<div class="welcome container">
 		<p>Welcome to BoxCutter!</p>
 		<router-link :to="{ name: 'FilePaths'}">Get Started</router-link>
 	</div>
@@ -9,9 +9,7 @@
 export default {
   name: 'Welcome',
   data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+    return {}
   }
 }
 </script>

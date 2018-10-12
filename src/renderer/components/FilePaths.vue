@@ -1,18 +1,12 @@
 <template>
 	<div class="FilePaths">
 	
-	<section class="hero is-primary">
-		<div class="hero-body">
-			<div class="container">
-			<h1 class="title">
-				Let's get started!
-			</h1>
-			<h2 class="subtitle">
-				First, let's talk about where your LaunchBox directory is.
-			</h2>
-			</div>
+		  	<div class="jumbotron jumbotron-fluid">
+		<div class="container">
+		<h1 class="display-4">Let's get started!</h1>
+		<p class="lead">First, let's talk about where your LaunchBox directory is.</p>
 		</div>
-	</section>
+	</div>
 
 	<section class="filepath container">
 		<b-form-file v-model="launchBoxDir" :state="Boolean(launchBoxDir)" directory placeholder="Choose your LaunchBox Directory"></b-form-file>
