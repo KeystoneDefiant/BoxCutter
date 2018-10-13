@@ -1,7 +1,7 @@
 <template>
 	<div class="welcome container">
 		<p>Welcome to BoxCutter!</p>
-		<router-link :to="{ name: 'FilePaths'}">Get Started</router-link>
+		<b-button :to="{ name: 'FilePaths'}">Get Started</b-button>
 	</div>
 </template>
 

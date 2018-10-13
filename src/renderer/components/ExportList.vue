@@ -2,24 +2,24 @@
   <div class="ExportList">
 
 	  	<div class="jumbotron jumbotron-fluid">
-		<div class="container">
-		<h1 class="display-4">OK! Now, what do you want to export?</h1>
-		<p class="lead">We can export specific playlists as well as favorites from your platforms.</p>
+			<div class="container">
+				<h1 class="display-4">OK! Now, what do you want to export?</h1>
+				<p class="lead">We can export specific playlists as well as favorites from your platforms.</p>
+			</div>
 		</div>
-	</div>
 
 
 		<section class="danger" v-show="this.$store.getters.filePath == null">
 			<p>It doesn't look like you've specified your LaunchBox path.</p> 
 			
-			<router-link :to="{name: 'FilePaths'}">Set your path here</router-link>
+			<b-button :to="{name: 'FilePaths'}">Set your path here</b-button>
 		</section>
 
 		<section class="danger" v-show="hasError">
 			<p>It looks like there was an error with your XML files. Here's what I know:</p> 
 			{{ hasError }}
 
-			<router-link :to="{name: 'FilePaths'}">Go back</router-link>
+			<b-button :to="{name: 'FilePaths'}">Go Back</b-button>
 		</section>
 
 		<section class="loadBox container" v-show="this.$store.getters.filePath != null && !showList">
@@ -30,6 +30,7 @@
 
         <section class="container is-hidden listDisplay" v-show="showList">
 			<b-table striped hover :items="this.$store.getters.lists" :fields="fields" v-on:row-clicked="toggleRow"></b-table>
+			<b-button :disabled="this.hasSelections == false" :to="{name: 'ExportProcess'}" class="nextStep">Let's Go!</b-button>
         </section>
   </div>
 </template>
@@ -50,6 +51,7 @@ export default {
 	  hasError: "",
 	  pctComplete: 0,
 	  showList: false,
+	  hasSelections: false,
 	  fields: {
 		name: {
 			label: 'List Name',
@@ -77,7 +79,6 @@ export default {
 			var filesProcessed = 0;
 			var totalFiles = files.length;
 
-			//for (const file of files) {
 			async.eachSeries(files, function(file, callback){
 				var listItem = me.$store.getters.filePath+"/Data/Platforms/"+file;
 				me.fileStatus = listItem.split("/").slice(-1)[0].replace(".xml", "")
@@ -137,6 +138,7 @@ export default {
 
 	toggleRow: function(item, index, evt){
 		evt.target.parentNode.classList.toggle("selected");
+
 		var myList = this.$store.getters.list(item.name)
 
 		//If our object doesn't have the selected property, make it;
@@ -147,6 +149,9 @@ export default {
 		myList.selected = isSelected;
 
 		this.$store.commit('toggleListSelection', myList);
+
+		var currentList = this.$store.getters.selectedList;
+		this.hasSelections = (currentList.length > 0) ? true : false;
 	}
 
   }

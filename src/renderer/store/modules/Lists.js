@@ -12,18 +12,16 @@ const mutations = {
 
 	clearLists(state){
 		state.lists = [];
+		state.listsSelected = [];
 	},
 
 	toggleListSelection(state, fileObj){
 		var index = state.listsSelected.findIndex(list => list.name === fileObj.name);
-		console.log(index)
 		if (index < 0){
 			state.listsSelected.push(fileObj)
 		}else{
 			state.listsSelected.splice(index, 1)
 		}
-
-		console.log(state.listsSelected)
 	}
 }
   
@@ -34,7 +32,11 @@ const getters = {
 
 	list: (state) => (searchName) =>{
 		return state.lists.find(list => list.name === searchName);
-	}
+	},
+
+	selectedList: state => {
+		return state.listsSelected;
+	},
 }
   
 export default {
