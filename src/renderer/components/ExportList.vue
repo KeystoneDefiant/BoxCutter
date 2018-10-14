@@ -8,13 +8,6 @@
 			</div>
 		</div>
 
-
-		<section class="danger" v-show="this.$store.getters.filePath == null">
-			<p>It doesn't look like you've specified your LaunchBox path.</p> 
-			
-			<b-button :to="{name: 'FilePaths'}">Set your path here</b-button>
-		</section>
-
 		<section class="danger" v-show="hasError">
 			<p>It looks like there was an error with your XML files. Here's what I know:</p> 
 			{{ hasError }}
@@ -43,6 +36,10 @@ const util = require('util');
 export default {
   name: "ExportList",
   created: function() {
+	if(this.$store.getters.exportPath == null){
+		this.$router.push("FilePaths");
+	}
+	
     this.getXML();
   },
   data: function() {

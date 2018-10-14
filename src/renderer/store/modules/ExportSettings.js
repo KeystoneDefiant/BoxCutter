@@ -7,6 +7,7 @@ const state = {
   exportImages: false,
   exportVideos: false,
   exportMetadata: true,
+  exportMetadataFilename: "gameinfo.xml",
   exportBIOS: true
 }
 
@@ -37,6 +38,10 @@ const mutations = {
 
 	setExportMetadata (state, bool) {
 		state.exportMetadata = bool
+	},
+
+	setExportMetadataFilename (state, filename) {
+		state.exportMetadataFilename = filename
 	},
 
 	setExportBIOS (state, bool) {
@@ -75,6 +80,10 @@ const getters = {
 	
 	exportMetadata: state => {
 		return state.exportMetadata
+	},
+
+	exportMetadataFilename: state => {
+		return state.exportMetadataFilename
 	},
 	
 	exportBIOS: state => {

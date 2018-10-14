@@ -3,8 +3,7 @@
 * Set media export type/settings (Export Videos, Images, Metadata)
 * Image preferred region
 * Export Process:
-	* Generate Folder Structure if none exists
-	* Copy ROMS
+	* Generate Metadata, generate new file
 	* Copy media
 * Option to dump all BIOS files from system dir
 * Make a nice logo

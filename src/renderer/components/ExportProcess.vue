@@ -53,8 +53,6 @@ export default {
 			var me = this;
 
 			//generate folders
-			console.log(me.exportPath)
-
 			fs.existsSync(me.exportPath) || fs.mkdirSync(me.exportPath);
 			fs.existsSync(me.exportPath+"/roms") || fs.mkdirSync(me.exportPath+"/roms");
 			
@@ -68,49 +66,81 @@ export default {
 
 			//Convert this path to whatever schema we're actually exporting to.
 			var exportLocation = me.exportPath+"/roms/"+platformName
+			var exportMetadataFilename = exportLocation+"/"+this.$store.getters.exportMetadataFilename
 
 			//Make dirs
 			fs.existsSync(exportLocation) || fs.mkdirSync(exportLocation);
+			
+			//Make Metadata file
+			console.log(exportMetadataFilename)
+			fs.writeFile(exportMetadataFilename, "", function(err){
+				if (err) throw err;
+				console.log("MetaData base file saved")
+			})
 
 			fs.readFile(platformXML, 'utf8', function (err,platformData) {
 				me.platformStatus = platformName
 				var platformXMLObj = libxmljs.parseXml(platformData.toString(), {noBlanks: true});
 				var games = platformXMLObj.find("//Favorite[text()='true']")
 
-				//games.forEach(function (game){
 				async.eachSeries(games, function(game, callback){
 					var gameXML = libxmljs.parseXml(game.parent().toString(), {noBlanks: true});
+
 					me.processFile({
 						gamePath: gameXML.get('//ApplicationPath').text().toString(),
 						gameName: gameXML.get('//Title').text().toString(),
-						exportLocation: exportLocation
+						gameXML: gameXML,
+						exportLocation: exportLocation,
+						exportMetadataFilename: exportMetadataFilename
 					});
+
 					callback();
 				})
+
+				//If this comes after the games are exported, then we did synced shit right. Neat.
+				console.warn("Done exporting games")
 			})
 		},
+
 
 		processFile: async function(gameData){
 			
 			var me = this;
 			//convert backslashes to forwardslashes juuuuuust in case.
 			var gamePath = gameData.gamePath.replace(/\\/g, '/');
+
+			//Set the path to the existing ROM
 			var setPath = path.resolve(this.$store.getters.filePath, gamePath);
+
+			//Get just the file name
 			var fileName = path.basename(setPath);
 			this.fileStatus = gameData.gameName;
-			
+
 			//copy file
 			fs.copyFile(setPath, gameData.exportLocation+"/"+fileName, (err) => {
 				if (err) throw err;
 			});
 
 			//copy metadata
+			this.processMetadata(gameData);
 			
 			//copy media
+			this.processMedia(gameData);
 
 			this.filesComplete++;
 			this.pctComplete = (this.filesComplete / this.filesTotal) * 100
+		},
 
+		processMetadata: async function(gameData){
+			var exportXML = gameData.gameXML.get('//Title').text().toString()
+			fs.appendFile(gameData.exportMetadataFilename, exportXML, function(err){
+				if (err) throw err;
+				console.log("MetaData saved", exportXML)
+			})
+		},
+
+		processMedia: async function(gameData){
+			console.log("Media", gameData)
 		}
 	}
 };
