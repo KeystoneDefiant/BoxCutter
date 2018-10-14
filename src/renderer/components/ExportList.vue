@@ -36,8 +36,8 @@
 </template>
 
 <script>
-var fs = require('fs');
-var libxmljs = require("libxmljs");
+const fs = require('fs');
+const libxmljs = require("libxmljs");
 const util = require('util');
 
 export default {
@@ -78,6 +78,7 @@ export default {
 
 			var filesProcessed = 0;
 			var totalFiles = files.length;
+			me.pctComplete = 0;
 
 			async.eachSeries(files, function(file, callback){
 				var listItem = me.$store.getters.filePath+"/Data/Platforms/"+file;

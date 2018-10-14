@@ -13,14 +13,20 @@
 </template>
 
 <script>
-var fs = require('fs');
+const fs = require('fs');
 const path = require('path');
-var libxmljs = require("libxmljs");
+const libxmljs = require("libxmljs");
 const util = require('util');
+const async = require('async')
 
 export default {
   name: "ExportList",
 	created: function() {
+		
+		if(this.$store.getters.exportPath == null){
+			this.$router.push("FilePaths");
+		}
+
 		var me = this;
 
 		//Get total number of games
@@ -32,7 +38,7 @@ export default {
 	},
 	data: function() {
 		return {
-			exportPath: this.$store.getters.exportPath,
+			exportPath: this.$store.getters.exportPath + "/" + this.$store.getters.exportDirName,
 			selectedPlatforms: this.$store.getters.selectedList,
 			platformStatus: "nowhere",
 			fileStatus: "nothing",
@@ -45,6 +51,12 @@ export default {
 	methods: {
 		startExport: function(){
 			var me = this;
+
+			//generate folders
+			console.log(me.exportPath)
+
+			fs.existsSync(me.exportPath) || fs.mkdirSync(me.exportPath);
+			fs.existsSync(me.exportPath+"/roms") || fs.mkdirSync(me.exportPath+"/roms");
 			
 			this.selectedPlatforms.forEach(function (platform){
 				me.processPlatform(platform.path, platform.name)
@@ -53,30 +65,47 @@ export default {
 
 		processPlatform: async function(platformXML, platformName){
 			var me = this;
-			fs.readFile(platformXML, 'utf8', function (err,platformData) {
 
+			//Convert this path to whatever schema we're actually exporting to.
+			var exportLocation = me.exportPath+"/roms/"+platformName
+
+			//Make dirs
+			fs.existsSync(exportLocation) || fs.mkdirSync(exportLocation);
+
+			fs.readFile(platformXML, 'utf8', function (err,platformData) {
 				me.platformStatus = platformName
 				var platformXMLObj = libxmljs.parseXml(platformData.toString(), {noBlanks: true});
 				var games = platformXMLObj.find("//Favorite[text()='true']")
 
-				//generate folder
-
-				games.forEach(function (game){
+				//games.forEach(function (game){
+				async.eachSeries(games, function(game, callback){
 					var gameXML = libxmljs.parseXml(game.parent().toString(), {noBlanks: true});
-					me.processFile(gameXML.get('//ApplicationPath').text().toString(), gameXML.get('//Title').text().toString())
+					me.processFile({
+						gamePath: gameXML.get('//ApplicationPath').text().toString(),
+						gameName: gameXML.get('//Title').text().toString(),
+						exportLocation: exportLocation
+					});
+					callback();
 				})
 			})
 		},
 
-		processFile: async function(gamePath, gameName){
+		processFile: async function(gameData){
 			
+			var me = this;
 			//convert backslashes to forwardslashes juuuuuust in case.
-			gamePath = gamePath.replace(/\\/g, '/');
+			var gamePath = gameData.gamePath.replace(/\\/g, '/');
 			var setPath = path.resolve(this.$store.getters.filePath, gamePath);
-			this.fileStatus = gameName;
-
+			var fileName = path.basename(setPath);
+			this.fileStatus = gameData.gameName;
+			
 			//copy file
+			fs.copyFile(setPath, gameData.exportLocation+"/"+fileName, (err) => {
+				if (err) throw err;
+			});
+
 			//copy metadata
+			
 			//copy media
 
 			this.filesComplete++;
