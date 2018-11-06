@@ -66,16 +66,14 @@ export default {
 
 			//Convert this path to whatever schema we're actually exporting to.
 			var exportLocation = me.exportPath+"/roms/"+platformName
-			var exportMetadataFilename = exportLocation+"/"+this.$store.getters.exportMetadataFilename
 
 			//Make dirs
 			fs.existsSync(exportLocation) || fs.mkdirSync(exportLocation);
 			
 			//Make Metadata file
-			console.log(exportMetadataFilename)
+			var exportMetadataFilename = exportLocation+"/"+this.$store.getters.exportMetadataFilename
 			fs.writeFile(exportMetadataFilename, "", function(err){
 				if (err) throw err;
-				console.log("MetaData base file saved")
 			})
 
 			fs.readFile(platformXML, 'utf8', function (err,platformData) {
@@ -96,15 +94,10 @@ export default {
 
 					callback();
 				})
-
-				//If this comes after the games are exported, then we did synced shit right. Neat.
-				console.warn("Done exporting games")
 			})
 		},
 
-
 		processFile: async function(gameData){
-			
 			var me = this;
 			//convert backslashes to forwardslashes juuuuuust in case.
 			var gamePath = gameData.gamePath.replace(/\\/g, '/');
@@ -122,10 +115,11 @@ export default {
 			});
 
 			//copy metadata
-			this.processMetadata(gameData);
+			if (this.$store.setExportMetadata == true) this.processMetadata(gameData);
 			
 			//copy media
-			this.processMedia(gameData);
+			if (this.$store.setExportImages == true) this.processImages(gameData);
+			if (this.$store.setExportVideos == true) this.processVideos(gameData);
 
 			this.filesComplete++;
 			this.pctComplete = (this.filesComplete / this.filesTotal) * 100
@@ -139,8 +133,12 @@ export default {
 			})
 		},
 
-		processMedia: async function(gameData){
-			console.log("Media", gameData)
+		processImages: async function(gameData){
+			console.log("Images", gameData)
+		},
+
+		processVideos: async function(gameData){
+			console.log("Videos", gameData)
 		}
 	}
 };

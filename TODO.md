@@ -5,8 +5,8 @@
 * Export Process:
 	* Generate Metadata, generate new file
 	* Copy media
-* Option to dump all BIOS files from system dir
 * Make a nice logo
 * Clean up DOM/CSS to make it look cool
 * Page transitions
 * Better headers
+* Make Readme actually a thing, move to do in there
