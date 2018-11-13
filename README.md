@@ -39,6 +39,9 @@ Here's my to-do list. I'm working on these things. Please don't bug me about whe
 Cool. Go nuts. Make this wasteland of code something better than what I can do. Show me up and remove any last shred of self-respect and self-esteem I have. Go man, go - it's the weekend.
 
 ``` bash
+# Install necessary packages if you don't have them: (use your package manager of choice here if you're on Linux)
+apt install -y libxss1 libgtk-3-0 libgconf-2-4 libnss3 libasound2
+
 # install dependencies
 yarn
 
