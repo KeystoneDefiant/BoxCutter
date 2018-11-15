@@ -43,15 +43,13 @@ Cool. Go nuts. Make this wasteland of code something better than what I can do. 
 apt install -y libxss1 libgtk-3-0 libgconf-2-4 libnss3 libasound2
 
 # install dependencies
-yarn
+npm install
 
 # serve with hot reload
-yarn run dev
+npm run dev
 
 # build electron application for production
-yarn run build
-
-
+npm run build
 ```
 
 ---

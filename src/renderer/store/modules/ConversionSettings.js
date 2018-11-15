@@ -1,4 +1,16 @@
 const state = {
+	// conversions:{
+	// 	"retropie":{
+	// 		"friendlyName":"RetroPie"
+	// 	},
+	// 	"copy":{
+	// 		"friendlyName":"Just Copy The Files"
+	// 	},
+	// 	"launchbox":{
+	// 		"friendlyName":"LaunchBox"
+	// 	}
+	// },
+
 	conversionMatrix:{
 		"retropie":{
 			"Arcade":"mame",
@@ -62,10 +74,14 @@ const actions = {
 
 const getters = {
 	conversions: state => {
-		return state.conversionMatrix
+		return state.conversions
 	},
 
-	list: (state) => (searchName) =>{
+	conversionMatrices: state => {
+		return state.conversionMatrix
+	},
+	
+	getMatrix: (state) => (searchName) =>{
 		return state.conversionMatrix.find(list => conversionMatrix.name === searchName);
 	},
 }
