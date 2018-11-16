@@ -1,8 +1,8 @@
 # BoxCutter
 
-## It's a thing that does a thing with your LaunchBox data
+## It's a thing that does a thing with your LaunchBox data things
 
-You need more details? OK then, Mary Lou, buckle up and get ready for the info train to come into the station. WOOOWOOOOOOO.
+You need more details? OK then, Mary Lou, buckle up and get ready for the info train to come into the station. WOOOWooooooo.
 
 BoxCutter will take your platform list, grab all games labled as your favorite, and then copy the metadata, images, videos and the ROM files to where ever you want it.
 
@@ -10,7 +10,7 @@ Not enough? Yeah, fine, I'll be your Burger King, baby - you're gonna have it yo
 
 BoxCutter can also export your platforms to specific folder schemas, like EmulationStation/RetroPie. You manage your collection in LaunchBox, run BoxCutter, throw all of the stuff BoxCutter exports to a USB drive, plug that sucker in to your Raspberry Pi, and you're off to the track, Speed Racer.
 
-## I'm sold, let's install this thing. Less wording, more downloading
+## I'm sold, let's install this thing. Less wording, more downloading, maximum exporting go go go
 
 Woah there, chief. Pump the brakes. You'll need to grab the latest relase of the app that I've cooked up for you. Unzip that thing, run that thing, and then you can use that thing. The app doesn't need an installer or anything fancy - just run it from wherever. He's a cool guy like that. You also don't need to yell "YES CHEF" when you're running it, but if you do, it would but a big smile on my face.
 
@@ -40,7 +40,11 @@ Cool. Go nuts. Make this wasteland of code something better than what I can do. 
 
 ``` bash
 # Install necessary packages if you don't have them: (use your package manager of choice here if you're on Linux)
-apt install -y libxss1 libgtk-3-0 libgconf-2-4 libnss3 libasound2
+apt install -y libxss1 libgtk-3-0 libgconf-2-4 libnss3 libasound2 gcc make
+
+# Make sure you have nvm and use version 9
+nvm install 8
+nvm use 8
 
 # install dependencies
 npm install

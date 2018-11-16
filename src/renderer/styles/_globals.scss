@@ -19,6 +19,14 @@ body{
 	font-family: 'Questrial', sans-serif !important;
 }
 
+.stateTransition-enter-active, .stateTransition-leave-active{
+	transition: opacity .5s;
+}
+
+.stateTransition-enter, .stateTransition-leave-to{
+	opacity: 0;
+}
+
 //Import state scss
 @import 
 	"states/ExportList",

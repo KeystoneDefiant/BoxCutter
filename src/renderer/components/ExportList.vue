@@ -1,4 +1,5 @@
 <template>
+<transition name="stateTransition">
   <div class="ExportList">
 
 	  	<div class="jumbotron jumbotron-fluid">
@@ -7,6 +8,12 @@
 				<p class="lead">We can export specific playlists as well as favorites from your platforms.</p>
 			</div>
 		</div>
+
+		<section class="danger" v-show="noFiles">
+			<p>You need to specify your file paths before continuing. I don't even know how you got here, cuz.</p>
+
+			<b-button :to="{name: 'FilePaths'}">Go Back</b-button>
+		</section>
 
 		<section class="danger" v-show="hasError">
 			<p>It looks like there was an error with your XML files. Here's what I know:</p> 
@@ -26,6 +33,7 @@
 			<b-button :disabled="this.hasSelections == false" :to="{name: 'ExportProcess'}" class="nextStep">Let's Go!</b-button>
         </section>
   </div>
+</transition>
 </template>
 
 <script>
@@ -35,17 +43,22 @@ const util = require('util');
 
 export default {
   name: "ExportList",
-  created: function() {
-	if(this.$store.getters.exportPath == null){
-		this.$router.push("FilePaths");
-	}
-	
-    this.getXML();
+  mounted: function() {
+
+	  console.warn(
+		  "export", this.$store.getters.exportPath, this.$store.getters.exportPath == 'undefined', 
+		  "file", this.$store.getters.exportPath, this.$store.getters.filePath == 'undefined')
+	if(this.$store.getters.exportPath == 'undefined' && this.$store.getters.filePath == 'undefined'){
+		router.push('FilePaths');
+	}else{
+		this.getXML();
+	}	
   },
   data: function() {
     return {
 	  fileStatus: "",
 	  hasError: "",
+	  noFiles: true,
 	  pctComplete: 0,
 	  showList: false,
 	  hasSelections: false,
@@ -71,7 +84,10 @@ export default {
 		var me = this;
 		fs.readdir(this.$store.getters.filePath+"/Data/Platforms", (err, files) => {
 			'use strict';
-			if (err) throw err;
+			if (err) {
+				throw err
+				this.hasError = true;
+			};
 
 			var filesProcessed = 0;
 			var totalFiles = files.length;
@@ -97,6 +113,7 @@ export default {
 					console.error("Error reading file: ", err)
 				}else{
 					me.fileStatus = "Done!"
+					me.hasError = false;
 					me.buildTable();
 				}
 			})

@@ -1,15 +1,15 @@
 const state = {
-	// conversions:{
-	// 	"retropie":{
-	// 		"friendlyName":"RetroPie"
-	// 	},
-	// 	"copy":{
-	// 		"friendlyName":"Just Copy The Files"
-	// 	},
-	// 	"launchbox":{
-	// 		"friendlyName":"LaunchBox"
-	// 	}
-	// },
+	conversions:{
+		"retropie":{
+			"friendlyName":"RetroPie"
+		},
+		"copy":{
+			"friendlyName":"Straight Copy"
+		},
+		"launchbox":{
+			"friendlyName":"LaunchBox"
+		}
+	},
 
 	conversionMatrix:{
 		"retropie":{
@@ -81,7 +81,7 @@ const getters = {
 		return state.conversionMatrix
 	},
 	
-	getMatrix: (state) => (searchName) =>{
+	conversionMatrix: (state) => (searchName) =>{
 		return state.conversionMatrix.find(list => conversionMatrix.name === searchName);
 	},
 }

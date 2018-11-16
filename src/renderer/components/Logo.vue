@@ -5,16 +5,23 @@
 </template>
 
 <script>
+import {TweenMax, Power2, TimelineMax} from "gsap/TweenMax";
+
 export default {
   name: "Logo",
-  created: function() {
-    // var tl = new TimelineMax();
-    // tl.set(".logo", {y:"+=50", opacity: 0})
-    //   .to(".logo", .5, {y:"-=50", opacity: 1})
-    //   .delay(.5)
-    // .add(animationDone)
+  mounted: function() {
+	var me = this;
+	var tl = new TimelineMax();
+    tl.set(".logo", {x:"+=50", opacity: 0})
+      .to(".logo", 2, {x:"-=50", opacity: 1})
+      .delay(.5)
+    .add(me.animationDone)
   },
-  methods: {},
+  methods: {
+	  animationDone: function(){
+		  
+	  }
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

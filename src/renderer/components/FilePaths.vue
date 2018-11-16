@@ -1,4 +1,5 @@
 <template>
+<transition name="stateTransition">
 	<div class="FilePaths">
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container">
@@ -15,6 +16,7 @@
 			<b-button v-on:click="nextScreen()" :disabled="Boolean(launchBoxDir) && Boolean(exportDir) == false">Let's Go!</b-button>
 		</section>
 	</div>
+</transition>
 </template>
 
 <script>

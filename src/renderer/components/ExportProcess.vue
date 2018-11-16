@@ -1,4 +1,5 @@
 <template>
+<transition name="stateTransition">
   <div class="ExportType container">
 		<section class="loadBox">
 			<p>Exporting your ROMs... This may take a bit. Get a coffee.</p>
@@ -10,6 +11,7 @@
 
 		</section>
   </div>
+</transition>
 </template>
 
 <script>
@@ -17,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 const libxmljs = require("libxmljs");
 const util = require('util');
-const async = require('async')
+const async = require('async');
 
 export default {
   name: "ExportList",
