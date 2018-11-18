@@ -18,9 +18,11 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    height: 640,
     useContentSize: true,
-    width: 1000
+	width: 1000,
+	// frame: false,
+	// transparent: true
   })
 
   mainWindow.loadURL(winURL)
@@ -33,7 +35,7 @@ function createWindow () {
 app.on('ready', createWindow)
 
 app.on('browser-window-created',function(e,window) {
-	//window.setMenu(null);
+	window.setMenu(null);
 })
 
 app.on('window-all-closed', () => {

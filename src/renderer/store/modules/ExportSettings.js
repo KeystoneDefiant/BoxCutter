@@ -24,6 +24,8 @@ const mutations = {
 }
 
 const getters = {
+	filePathObject: state => {return state.filePath},
+	exportPathObject: state => {return state.exportPath},
 	filePath: state => {return state.filePath.path},
 	exportPath: state => {return state.exportPath.path},
 	exportDirName: state => {return state.exportDirName},

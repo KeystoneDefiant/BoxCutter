@@ -1,6 +1,9 @@
 <template>
-<transition name="stateTransition">
-	<div class="FilePaths">
+<transition
+	name="transition"
+	enter-active-class="fadeInRight"
+	leave-active-class="fadeOutLeft">
+	<div class="FilePaths state">
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container">
 				<h1 class="display-4">Let's get started!</h1>
@@ -8,12 +11,26 @@
 			</div>
 		</div>
 
-		<section class="filepath container-fluid">
-			<b-form-file v-model="launchBoxDir" :state="Boolean(launchBoxDir)" directory placeholder="Choose your LaunchBox Directory"></b-form-file>
+		<section class="filepath">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<b-form-file v-model="launchBoxDir" :state="Boolean(launchBoxDir)" directory placeholder="Choose your LaunchBox Directory"></b-form-file>
+					</div>
+				</div>
 
-			<b-form-file v-model="exportDir" :state="Boolean(exportDir)" directory placeholder="Choose your Export Directory"></b-form-file>
-			
-			<b-button v-on:click="nextScreen()" :disabled="Boolean(launchBoxDir) && Boolean(exportDir) == false">Let's Go!</b-button>
+				<div class="row">
+					<div class="col-12">
+						<b-form-file v-model="exportDir" :state="Boolean(exportDir)" directory placeholder="Choose your Export Directory"></b-form-file>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-12">
+						<b-button v-on:click="nextScreen()" v-show="Boolean(launchBoxDir) && Boolean(exportDir) == false">Let's Go!</b-button>
+					</div>
+				</div>
+			</div>
 		</section>
 	</div>
 </transition>
@@ -26,6 +43,8 @@ export default {
 		if(this.$store.getters.filePath != null){
 			this.launchBoxDir = this.$store.getters.filePath;
 		}
+
+		this.$store.dispatch('setNavigation', {navSide: "left", navArray: [{id: 0, text:"Go Back Again", link:"Welcome"}]})
 	},
 	data: function(){
 		return {

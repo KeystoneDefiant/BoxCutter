@@ -1,16 +1,19 @@
 <template>
 	<div id="app">
-		<logo></logo>
-		<router-view></router-view>
+		<logo />
+		<router-view />
+		<navigation />
 	</div>
 </template>
 
 <script>
 	import Logo from "./components/Logo";
+	import Navigation from "./components/Navigation/Navigation.vue"
 	export default {
-		name: 'vue-electron-test',
+		name: 'BoxCutter',
 		components:{
-			Logo
+			Logo,
+			Navigation
 		}
 	}
 </script>

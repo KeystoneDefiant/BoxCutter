@@ -1,6 +1,9 @@
 <template>
-<transition name="stateTransition">
-  <div class="ExportList">
+<transition
+	name="transition"
+	enter-active-class="fadeInRight"
+	leave-active-class="fadeOutLeft">
+  <div class="ExportList state">
 
 	  	<div class="jumbotron jumbotron-fluid">
 			<div class="container">
@@ -8,12 +11,6 @@
 				<p class="lead">We can export specific playlists as well as favorites from your platforms.</p>
 			</div>
 		</div>
-
-		<section class="danger" v-show="noFiles">
-			<p>You need to specify your file paths before continuing. I don't even know how you got here, cuz.</p>
-
-			<b-button :to="{name: 'FilePaths'}">Go Back</b-button>
-		</section>
 
 		<section class="danger" v-show="hasError">
 			<p>It looks like there was an error with your XML files. Here's what I know:</p> 
@@ -45,11 +42,8 @@ export default {
   name: "ExportList",
   mounted: function() {
 
-	  console.warn(
-		  "export", this.$store.getters.exportPath, this.$store.getters.exportPath == 'undefined', 
-		  "file", this.$store.getters.exportPath, this.$store.getters.filePath == 'undefined')
-	if(this.$store.getters.exportPath == 'undefined' && this.$store.getters.filePath == 'undefined'){
-		router.push('FilePaths');
+	if(typeof this.$store.getters.exportPathObject == 'undefined' && typeof this.$store.getters.filePathObject == 'undefined'){
+		this.$router.push('FilePaths');
 	}else{
 		this.getXML();
 	}	
@@ -58,7 +52,6 @@ export default {
     return {
 	  fileStatus: "",
 	  hasError: "",
-	  noFiles: true,
 	  pctComplete: 0,
 	  showList: false,
 	  hasSelections: false,

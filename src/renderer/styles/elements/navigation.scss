@@ -1,0 +1,18 @@
+#navigation{
+	position: fixed;
+	bottom: 0px;
+	height: 3em;
+	background: $color-accentDark;
+	width: 100%;
+
+	.navSection{
+		padding: 0;
+		height: 3em;
+
+		.btn{}
+	}
+
+	.navLeft{}
+
+	.navRight{}
+}

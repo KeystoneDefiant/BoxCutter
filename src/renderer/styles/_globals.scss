@@ -17,18 +17,16 @@ body{
 	margin: 0px;
 	padding: 0px;
 	font-family: 'Questrial', sans-serif !important;
-}
-
-.stateTransition-enter-active, .stateTransition-leave-active{
-	transition: opacity .5s;
-}
-
-.stateTransition-enter, .stateTransition-leave-to{
-	opacity: 0;
+	overflow: hidden;
+	background: url(/static/background.png);
 }
 
 //Import state scss
-@import 
+@import
+	"elements/headers",
+	"elements/states",
+	"elements/navigation",
+	
 	"states/ExportList",
 	"states/Logo",
 	"states/ExportProcess";
