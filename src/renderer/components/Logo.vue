@@ -1,6 +1,6 @@
 <template>
   <div class="logo">
-    <span class="logo__box">Box</span><span class="logo__cutter">Cutter</span>
+    <span class="logo__box">Box<i class="fas fa-dice-d6"></i></span><span class="logo__cutter"><i class="fas fa-cut"></i>Cutter</span>
   </div>
 </template>
 

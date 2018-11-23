@@ -16,7 +16,7 @@ const getters = {
 // actions
 const actions = {
 	setNavigation (context, payload) {
-		//context.commit('clearNav');
+		context.commit('clearNav');
 		context.commit('setNav', payload);
 	},
 
@@ -33,24 +33,9 @@ const mutations = {
 		state.centerNav = state.rightNav = state.leftNav = [];
 	},
 
-	addNav(state, payload){
-		if (navSide == "left"){
-			state.leftNav.push(navItem)
-		}
-
-		if (navSide == "right"){
-			state.rightNav.push(navItem)
-		}
-	},
-
 	setNav(state, payload){
-		if (payload.navSide == "left"){
-			state.leftNav = payload.navArray;
-		}
-
-		if (payload.navSide == "right"){
-			state.rightNav = payload.navArray;
-		}
+		state.leftNav = payload.left;
+		state.rightNav = payload.right;
 	}
 }
 

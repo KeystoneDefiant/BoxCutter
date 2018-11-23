@@ -44,12 +44,16 @@ export default {
 			this.launchBoxDir = this.$store.getters.filePath;
 		}
 
-		this.$store.dispatch('setNavigation', {navSide: "left", navArray: [{id: 0, text:"Go Back Again", link:"Welcome"}]})
+		this.$store.dispatch('setNavigation', this.navigation);
 	},
 	data: function(){
 		return {
 			launchBoxDir: this.$store.getters.filePath,
-			exportDir: this.$store.getters.exportPath
+			exportDir: this.$store.getters.exportPath,
+			navigation: {
+				left: [{id: "left1", text:"Go Back", link:"Welcome"}],
+				right: [{id: 0, text:"Let's Go!", click:"nextScreen()", show:"Boolean(launchBoxDir) && Boolean(exportDir) == false"}]
+			}
 		}
 	},
 	methods: {
@@ -58,6 +62,8 @@ export default {
 			this.$store.commit('setFilePath', this.launchBoxDir);
 			this.$store.commit('setExportPath', this.exportDir);
 			this.$router.push({ name: 'ExportList'})
+
+			
 		}
  	}
 };
