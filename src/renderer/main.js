@@ -14,7 +14,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 require('vue2-animate/dist/vue2-animate.min.css')
 
-import '@fortawesome/fontawesome-free'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import '@fortawesome/fontawesome-free/js/all.min.js'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios

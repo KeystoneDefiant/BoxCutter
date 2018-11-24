@@ -1,8 +1,12 @@
 #app > .state{
 	background: $color-shadeLight;
-	height: 98vh;
-	border-radius: 0vw 0vw 1vw 1vw;
+	height: 100vh;
+	padding-bottom: 20vh;
 
 	position: absolute;
-	width: 98vw;
+	width: 100vw;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }

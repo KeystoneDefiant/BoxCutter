@@ -1,20 +1,26 @@
 .logo {
-	font-size: 500%;
-  
-	> span {
-	  width: 50%;
-	  display: inline-block;
-	  margin: 0px;
-	  padding: 0px;
+	border-bottom: 2px solid $color-accentLight;
+
+	> *{
+		height: 10vh;
 	}
-    &__box {
-      background: $secondary;
-      color: $primary;
-      text-align: right;
-    }
-    &__cutter {
-      background: $primary;
-      color: $secondary;
-      text-align: left;
-    }
-  }
+
+	&__image{
+		background-color: $color-accentDark;
+		background-image: url(/static/backgrounds/black-twill.png);
+		> *{
+			position: absolute;
+			font-size: 10vh;
+		}
+	}
+
+	&__section{
+		background-color: $color-main;
+		background-image: url(/static/backgrounds/noise-pattern-with-subtle-cross-lines.png);
+		color: $color-shadeDark;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 2em;
+	}
+}

@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Questrial');
 
-$color-shadeLight: #f1f0f2;
-$color-accentLight: #8fc8e6;
-$color-main: #2982c5;
-$color-shadeDark: #274c76;
-$color-accentDark: #5d6a89;
+$color-shadeLight: #E7E5DF;
+$color-accentLight: #E8C871;
+$color-main: #95BA50;
+$color-shadeDark: #393E41;
+$color-accentDark: #2B92B5;
 $color-textDark: $color-shadeDark;
 $color-textLight: $color-shadeLight;
 
@@ -14,11 +14,14 @@ $secondary: $color-shadeDark;
 $info: $color-accentLight;
 
 body{
+	height: 100vh;
+	width: 100vw;
 	margin: 0px;
 	padding: 0px;
 	font-family: 'Questrial', sans-serif !important;
 	overflow: hidden;
-	background: url(/static/background.png);
+	background-color: $color-accentDark;
+	background-image: url(/static/backgrounds/asfalt-light.png);
 }
 
 //Import state scss

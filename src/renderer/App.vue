@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import Logo from "./components/Logo";
+	import Logo from "./components/Navigation/Logo";
 	import Navigation from "./components/Navigation/Navigation.vue"
 	export default {
 		name: 'BoxCutter',
