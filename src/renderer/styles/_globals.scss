@@ -20,8 +20,8 @@ body{
 	padding: 0px;
 	font-family: 'Questrial', sans-serif !important;
 	overflow: hidden;
-	background-color: $color-accentDark;
-	background-image: url(/static/backgrounds/asfalt-light.png);
+	background-color: $color-shadeLight !important;
+	background-image: url(/static/backgrounds/asfalt-light.png) !important;
 }
 
 //Import state scss

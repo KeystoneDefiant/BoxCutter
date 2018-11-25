@@ -18,44 +18,40 @@
 			width: 50%;
 			max-width: 110px;
 			overflow: hidden;
-			margin: 0 2em;
+			//margin: 0 2em;
 			
 			svg{
 				font-size: 200%;
-				position: absolute;
+				//position: absolute;
 				opacity: .4;
-				top: 0%;
-				width: 100%;
+				// width: 100%;
 			}
 			&__text{
-				position: absolute;
-				width: 100%;
-				bottom: .3em;
+				//position: absolute;
+				//width: 100%;
 			}
 		}
 	}
 
 	.navLeft{
 		.btn{
-			transform: skewX(225deg);
-			>*{transform: skewX(-45deg);}
+			// transform: skewX(225deg);
+			// >*{transform: skewX(-45deg);}
 			&__text{
-				left: -10%;
+				//left: -10%;
 				text-align: right;
 			}
-			svg{left: -20%;}
 		}
 	}
 
 	.navRight{
 		.btn{
-			transform: skewX(315deg);
-			>*{transform: skewX(-135deg);}
+			// transform: skewX(315deg);
+			// >*{transform: skewX(-135deg);}
 			&__text{
-				right: -10%;
+				//right: -10%;
 				text-align: left;
 			}
-			svg{right: -20%;}
 		}
 	}
 }
