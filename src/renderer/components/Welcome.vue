@@ -1,7 +1,7 @@
 <template>
 	<transition	name="transition" enter-active-class="fadeInRight" leave-active-class="fadeOutLeft">
 
-		<div class="welcome state">
+		<div class="welcome state ">
 			<div class="container">
 				<p class="lead">We're going to go through a few questions to make sure you get exactly what you want, where you want, how you want it. Savvy?</p>
 			</div>
