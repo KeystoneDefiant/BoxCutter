@@ -5,29 +5,23 @@
 	leave-active-class="fadeOutLeft">
   <div class="ExportList state">
 
-	  	<div class="jumbotron jumbotron-fluid">
-			<div class="container">
-				<h1 class="display-4">OK! Now, what do you want to export?</h1>
-				<p class="lead">We can export specific playlists as well as favorites from your platforms.</p>
-			</div>
-		</div>
-
 		<section class="danger" v-show="hasError">
 			<p>It looks like there was an error with your XML files. Here's what I know:</p> 
 			{{ hasError }}
-
-			<b-button :to="{name: 'FilePaths'}">Go Back</b-button>
 		</section>
 
 		<section class="loadBox container" v-show="this.$store.getters.filePath != null && !showList">
-			<p>Loading from {{ this.$store.getters.filePath }}</p>
-			<p>Now Processing: {{fileStatus}}</p>
-			<b-progress :value="pctComplete" variant="info" striped :animated="true" class="mb-2"></b-progress>
+			<div class="row">
+				<p>Loading from {{ this.$store.getters.filePath }}</p>
+				<p>Now Processing: {{fileStatus}}</p>
+				<b-progress :value="pctComplete" variant="info" striped :animated="true" class="mb-2"></b-progress>
+			</div>
 		</section>
 
         <section class="container is-hidden listDisplay" v-show="showList">
-			<b-table striped hover :items="this.$store.getters.lists" :fields="fields" v-on:row-clicked="toggleRow"></b-table>
-			<b-button :disabled="this.hasSelections == false" :to="{name: 'ExportProcess'}" class="nextStep">Let's Go!</b-button>
+			<div class="row">
+				<b-table striped hover :items="this.$store.getters.lists" :fields="fields" v-on:row-clicked="toggleRow"></b-table>
+			</div>
         </section>
   </div>
 </transition>
@@ -39,34 +33,41 @@ const libxmljs = require("libxmljs");
 const util = require('util');
 
 export default {
-  name: "ExportList",
-  mounted: function() {
-
-	if(typeof this.$store.getters.exportPathObject == 'undefined' && typeof this.$store.getters.filePathObject == 'undefined'){
-		this.$router.push('FilePaths');
-	}else{
-		this.getXML();
-	}	
-  },
-  data: function() {
-    return {
-	  fileStatus: "",
-	  hasError: "",
-	  pctComplete: 0,
-	  showList: false,
-	  hasSelections: false,
-	  fields: {
-		name: {
-			label: 'List Name',
-			sortable: true
-		},
-		count: {
-			label: 'Games In List',
-			sortable: true
-		},
-	  }
-    }
-  },
+	name: "ExportList",
+	created: function() {
+		this.$store.dispatch('setNavigation', this.navigation);
+		this.$store.dispatch('setHeader', "Pick Lists to Export");
+	},
+	mounted: function() {
+		if(typeof this.$store.getters.exportPathObject == 'undefined' && typeof this.$store.getters.filePathObject == 'undefined'){
+			this.$router.push('FilePaths');
+		}else{
+			this.getXML();
+		}	
+	},
+	data: function() {
+		return {
+			fileStatus: "",
+			hasError: "",
+			pctComplete: 0,
+			showList: false,
+			hasSelections: false,
+			fields: {
+				name: {
+					label: 'List Name',
+					sortable: true
+				},
+				count: {
+					label: 'Games In List',
+					sortable: true
+				},
+			},
+			navigation: {
+				left: [{id: 100, text:"Start Over", link:"Welcome", icon:"angle-double-left", show:true},{id: 200, text:"Go Back", link:"FilePaths", icon:"angle-left", show:true}],
+				right: [{id: 3, text:"Export!", link:"ExportProcess", icon:"angle-right", show: false}]
+			}
+		}
+	},
   methods: {
     getXML: function() {
 		var async = require('async')
@@ -160,6 +161,8 @@ export default {
 
 		var currentList = this.$store.getters.selectedList;
 		this.hasSelections = (currentList.length > 0) ? true : false;
+
+		this.navigation.right[0].show = this.hasSelections;
 	}
 
   }
