@@ -1,8 +1,7 @@
 <template>
 	<div class="logo row">
 		<div class="logo__image col-4">
-			<div class="logo__box fas fa-dice-d6"></div>
-			<div class="logo__cutter fas fa-cut"></div>
+			<imgLogo />
 		</div>
 
 		<div class="logo__section col-8">
@@ -15,9 +14,12 @@
 
 <script>
 import {TweenMax, Power2, TimelineMax} from "gsap/TweenMax";
-
+import imgLogo from '../../assets/logo.svg';
 export default {
 	name: "Logo",
+	components: {
+		imgLogo
+	},
 	// mounted: function() {
 	// 	var me = this;
 	// 	var tl = new TimelineMax();

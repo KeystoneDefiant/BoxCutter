@@ -74,7 +74,7 @@ let rendererConfig = {
         }
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif)(\?.*)?$/,
         use: {
           loader: 'url-loader',
           query: {
@@ -100,7 +100,11 @@ let rendererConfig = {
             name: 'fonts/[name]--[folder].[ext]'
           }
         }
-      }
+	  },
+	  {
+		test: /\.svg$/,
+		loader: 'vue-svg-loader', // `vue-svg` for webpack 1.x
+	   },
     ]
   },
   node: {

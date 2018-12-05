@@ -56,10 +56,10 @@ let webConfig = {
               less: 'vue-style-loader!css-loader!less-loader'
             }
           }
-        }
+		}
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif)(\?.*)?$/,
         use: {
           loader: 'url-loader',
           query: {
@@ -77,7 +77,11 @@ let webConfig = {
             name: 'fonts/[name].[ext]'
           }
         }
-      }
+	  },
+	  {
+		test: /\.svg$/,
+		loader: 'vue-svg-loader', // `vue-svg` for webpack 1.x
+	   },
     ]
   },
   plugins: [

@@ -1,16 +1,25 @@
 .logo {
 	border-bottom: 2px solid $color-accentLight;
+	
+	height: 20vh;
 
 	> *{
-		height: 10vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	&__image{
 		background-color: $color-accentDark;
 		background-image: url(/static/backgrounds/black-twill.png);
-		> *{
-			position: absolute;
-			font-size: 10vh;
+		font-family: 'Righteous', cursive;
+
+		svg{
+			padding: .2em;
+			width: 100%;
+			height: 100%;
+			fill: $color-shadeDark;
+			.cls-5{fill: $color-accentLight;}
 		}
 	}
 
@@ -18,9 +27,6 @@
 		background-color: $color-main;
 		background-image: url(/static/backgrounds/noise-pattern-with-subtle-cross-lines.png);
 		color: $color-shadeDark;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		font-size: 2em;
 	}
 }
