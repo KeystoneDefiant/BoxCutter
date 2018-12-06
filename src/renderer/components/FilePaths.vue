@@ -1,5 +1,4 @@
 <template>
-<transition	name="transition" enter-active-class="fadeInRight" leave-active-class="fadeOutLeft">
 	<div class="FilePaths state">
 		<div class="container">
 			<div class="row align-items-center">
@@ -17,7 +16,6 @@
 			</div>
 		</div>
 	</div>
-</transition>
 </template>
 
 <script>

@@ -1,3 +1,7 @@
+.logo, .logo__image, .logo__section{
+	//transition: all .5s;
+}
+
 .logo {
 	border-bottom: 2px solid $color-accentLight;
 	
@@ -14,6 +18,8 @@
 		background-image: url(/static/backgrounds/black-twill.png);
 		font-family: 'Righteous', cursive;
 
+		width: 33.3333%;
+
 		svg{
 			padding: .2em;
 			width: 100%;
@@ -28,5 +34,12 @@
 		background-image: url(/static/backgrounds/noise-pattern-with-subtle-cross-lines.png);
 		color: $color-shadeDark;
 		font-size: 2em;
+
+		width: 66.6666%;
+		overflow: hidden;
+
+		span{
+			position: absolute;
+		}
 	}
 }

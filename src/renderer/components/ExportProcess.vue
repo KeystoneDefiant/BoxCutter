@@ -1,8 +1,4 @@
 <template>
-<transition
-	name="transition"
-	enter-active-class="fadeInRight"
-	leave-active-class="fadeOutLeft">
   <div class="ExportType container">
 		<section class="loadBox">
 			<p>Exporting your ROMs... This may take a bit. Get a coffee.</p>
@@ -14,7 +10,6 @@
 
 		</section>
   </div>
-</transition>
 </template>
 
 <script>

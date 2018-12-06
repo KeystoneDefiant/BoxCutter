@@ -1,8 +1,4 @@
 <template>
-<transition
-	name="transition"
-	enter-active-class="fadeInRight"
-	leave-active-class="fadeOutLeft">
   <div class="ExportList state">
 
 		<section class="danger" v-show="hasError">
@@ -24,7 +20,6 @@
 			</div>
         </section>
   </div>
-</transition>
 </template>
 
 <script>
