@@ -8,10 +8,18 @@
 
 		<section class="loadBox container" v-show="this.$store.getters.filePath != null && !showList">
 			<div class="row">
-				<p>Loading from {{ this.$store.getters.filePath }}</p>
-				<p>Now Processing: {{fileStatus}}</p>
-				<b-progress :value="pctComplete" variant="info" striped :animated="true" class="mb-2"></b-progress>
+				<div class="col-12">Loading from {{ this.$store.getters.filePath }}</div>
 			</div>
+
+			<div class="row">
+				<b-progress :value="(filesProcessed / totalFiles)*100" variant="info" striped :animated="true" class="mb-2"></b-progress>
+			</div>
+
+			<div class="row">
+				<div class="col-6">Now Processing: {{fileStatus}}</div>
+				<div class="col-6">{{filesProcessed}} of {{totalFiles}}</div>
+			</div>
+
 		</section>
 
         <section class="container is-hidden listDisplay" v-show="showList">
@@ -27,24 +35,31 @@ const fs = require('fs');
 const libxmljs = require("libxmljs");
 const util = require('util');
 
+import { setTimeout } from 'timers';
+
 export default {
 	name: "ExportList",
 	created: function() {
 		this.$store.dispatch('setNavigation', this.navigation);
 		this.$store.dispatch('setHeader', "Pick Lists to Export");
-	},
-	mounted: function() {
+
 		if(typeof this.$store.getters.exportPathObject == 'undefined' && typeof this.$store.getters.filePathObject == 'undefined'){
 			this.$router.push('FilePaths');
 		}else{
-			this.getXML();
+			var me = this
+			setTimeout(function(){me.getXML();},1000)
 		}	
+
+	},
+	mounted: function() {
 	},
 	data: function() {
 		return {
 			fileStatus: "",
 			hasError: "",
 			pctComplete: 0,
+			filesProcessed: 0,
+			totalFiles: 0,
 			showList: false,
 			hasSelections: false,
 			fields: {
@@ -78,18 +93,19 @@ export default {
 				this.hasError = true;
 			};
 
-			var filesProcessed = 0;
-			var totalFiles = files.length;
+			me.filesProcessed = 0;
+			me.totalFiles = files.length;
 			me.pctComplete = 0;
 
 			async.eachSeries(files, function(file, callback){
+
 				var listItem = me.$store.getters.filePath+"/Data/Platforms/"+file;
 				me.fileStatus = listItem.split("/").slice(-1)[0].replace(".xml", "")
 
 				me.processFile(listItem)
 					.then(pathData =>{
-						filesProcessed++;
-						me.pctComplete = (filesProcessed / totalFiles) * 100;
+						me.filesProcessed++;
+						me.pctComplete = (me.filesProcessed / me.totalFiles) * 100;
 						me.$store.commit('addList', pathData);
 						callback();
 					})
@@ -129,7 +145,6 @@ export default {
 					if (gameCount < 1){
 						returnObj._cellVariants = 'danger'
 					}
-
 					resolve(returnObj)
 				}	
 			});

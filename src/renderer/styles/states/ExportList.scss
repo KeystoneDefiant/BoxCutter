@@ -2,14 +2,11 @@
 	.progress{
 		margin: 1em 0;
 		height: 2em;
+		width: 100%;
 	}
 
 	table .selected{
 		background-color: $info !important;
-	}
-
-	.nextStep{
-		margin: 1em 0;
 	}
 
 	.listDisplay{

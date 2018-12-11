@@ -1,12 +1,22 @@
 <template>
-  <div class="ExportType container">
-		<section class="loadBox">
-			<p>Exporting your ROMs... This may take a bit. Get a coffee.</p>
-			<p>Progress: {{filesComplete}} of {{filesTotal}}</p>
-			<b-progress :value="pctComplete" variant="info" striped :animated="true" class="mb-2"></b-progress>
+  <div class="ExportType state">
+		<section class="container">
+			<div class="row">
+				<div class="col-12 lead">Exporting your ROMs... This may take a bit. Get a coffee.</div>
+			</div>
 
-			<p>Exporting from {{platformStatus}}</p>
-			<p>Now exporting {{ fileStatus }}</p>
+			<div class="row">
+				<div class="col-6">Exporting from {{platformStatus}}</div>
+				<div class="col-6">Progress: {{filesComplete}} of {{filesTotal}}</div>
+			</div>
+
+			<div class="row">
+				<b-progress :value="pctComplete" variant="info" striped :animated="true" class="mb-2"></b-progress>
+			</div>
+
+			<div class="row">
+				<div class="col-12">Now exporting {{ fileStatus }}</div>
+			</div>
 
 		</section>
   </div>
@@ -33,6 +43,9 @@ export default {
 		this.selectedPlatforms.forEach(function (platform){
 			me.filesTotal += platform.count;
 		})
+
+		this.$store.dispatch('setNavigation', this.navigation);
+		this.$store.dispatch('setHeader', "Exporting your files");
 		
 		this.startExport();
 	},
@@ -45,7 +58,12 @@ export default {
 			hasError: "",
 			pctComplete: 0,
 			filesTotal: 0,
-			filesComplete: 0
+			filesComplete: 0,
+
+			navigation: {
+				left: [{id: 100, text:"Start Over", link:"Welcome", icon:"angle-double-left", show:true},{id: 200, text:"Go Back", link:"FilePaths", icon:"angle-left", show:true}],
+				right: [{id: 3, text:"Export!", link:"ExportProcess", icon:"angle-right", show: false}]
+			}
 		}
 	},
 	methods: {

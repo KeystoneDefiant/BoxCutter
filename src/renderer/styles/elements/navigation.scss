@@ -1,5 +1,5 @@
 #navigation{
-	position: fixed;
+	position: absolute;
 	bottom: 0px;
 	height: 4.2em;
 	max-height: 10vh;
@@ -9,35 +9,33 @@
 	overflow: hidden;
 	border-top: 2px solid $color-accentLight;
 
+	z-index: 1;
+
 	.navSection{
 		padding: 0;
 		height: 3em;
 
 		.btn{
 			height: 140%;
-			max-width: 110px;
+			//max-width: 110px;
 			overflow: hidden;
 			margin: 0 .5em;
+			border-radius: 0;
+			padding: 2px 2em;
 			
 			svg{
 				font-size: 200%;
-				//position: absolute;
 				opacity: .4;
-				// width: 100%;
 			}
 			&__text{
-				//position: absolute;
-				//width: 100%;
+
 			}
 		}
 	}
 
 	.navLeft{
 		.btn{
-			// transform: skewX(225deg);
-			// >*{transform: skewX(-45deg);}
 			&__text{
-				//left: -10%;
 				text-align: right;
 			}
 		}
@@ -45,10 +43,7 @@
 
 	.navRight{
 		.btn{
-			// transform: skewX(315deg);
-			// >*{transform: skewX(-135deg);}
 			&__text{
-				//right: -10%;
 				text-align: left;
 			}
 		}
