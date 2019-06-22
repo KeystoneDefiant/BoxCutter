@@ -2,12 +2,13 @@ const state = {
   filePath: {},
   exportPath: {},
   exportDirName: "BoxCutter",
-  exportStructure: "",
-  exportPreferredRegion: ["United States", "North America", "United States, Europe", "North America, Europe"],
-  exportImages: false,
-  exportVideos: false,
+  exportStructure: "retropie",
+  exportPreferredRegion: ["United States", "North America", "World", ""],
+  exportImages: true,
+  exportVideos: true,
   exportMetadata: true,
   exportMetadataFilename: "gamelist.xml",
+  exportMediaLocation: "images",
   exportBIOS: true
 }
 
@@ -36,6 +37,8 @@ const getters = {
 	exportMetadata: state => {return state.exportMetadata},
 	exportMetadataFilename: state => {return state.exportMetadataFilename},
 	exportBIOS: state => {return state.exportBIOS},
+	exportMediaLocation: state => {return state.exportMediaLocation},
+	exportMediaTypes: state => {return state.exportMediaTypes},
 }
 
 export default { state, mutations, getters }
