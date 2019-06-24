@@ -49,8 +49,9 @@ export default {
 
 		this.$store.dispatch('setNavigation', this.navigation);
 		this.$store.dispatch('setHeader', "Exporting your files");
-		
-		this.startExport();
+
+		var me = this
+		setTimeout(function(){me.startExport();},1000)
 	},
 	data: function() {
 		return {
@@ -71,7 +72,7 @@ export default {
 		}
 	},
 	methods: {
-		startExport: function(){
+		startExport: async function(){
 			var me = this;
 
 			//generate folders
@@ -84,7 +85,7 @@ export default {
 			})
 		},
 
-		processPlatform: function(platformXML, platformName){
+		processPlatform: async function(platformXML, platformName){
 			var me = this;
 
 			//Convert this path to whatever schema we're actually exporting to.
@@ -186,7 +187,7 @@ export default {
 			})
 		},
 
-		processRomFile: function(gameData, metadata, callback){
+		processRomFile: async function(gameData, metadata, callback){
 			//copy file
 			fs.copyFileSync(gameData.romPath, gameData.exportLocation+"/"+gameData.fileName, (err) => {
 				if (err) throw err;
@@ -195,7 +196,7 @@ export default {
 			callback(null, gameData, metadata)
 		},
 
-		processImages: function(gameData, metadata, callback){
+		processImages: async function(gameData, metadata, callback){
 			var me = this; 
 
 			var regions = this.$store.getters.exportPreferredRegion;
@@ -217,17 +218,16 @@ export default {
 				// get image path based on type
 				var basePath = path.resolve(me.$store.getters.filePath, "Images", gameData.gamePlatform, sourceImageType)
 
-				var escapedGameName = gameData.gameName
-				var regex = new RegExp(escapedGameName+'.*', 'g');
-
-				console.log(regex)
+				//var escapedGameName = gameData.gameName.replace("'",".")
+				var escapedGameName = gameData.gameName.replace(/([^A-Za-z0-9])/giu, ".");
+				var regex = new RegExp("("+escapedGameName+").*", "giu");
 				
+				console.log(regex)
+
 				async.waterfall([
 					function(waterfallCallback) {
 						//Find Files, pass image Location
-					
 						var files = find.fileSync(regex, basePath);
-						console.warn(files)
 
 						if (files.length > 0){
 							var extension = path.extname(files[0])
