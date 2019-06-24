@@ -28,8 +28,9 @@ const state = {
 				"header":'<?xml version="1.0" encoding="UTF-8"?><gameList>',
 				"footer":"</gameList>",
 				"gameElement":"game",
+				"pathToRomElement":"path",
 				"elements":{
-					"path":"//ApplicationPath",
+					//"path":"//ApplicationPath",
 					"name":"//Title",
 					"desc":"//Notes",
 					"rating":"//CommunityStarRating",
@@ -38,11 +39,6 @@ const state = {
 					"publisher":"//Publisher",
 					"genre":"//Genre",
 				},
-				"mediaTags":{
-					"image":"imagePath",
-					"marquee":"logoPath",
-					"video":"videoPath"
-				}
 			},
 			"systems":{
 				"Arcade":"arcade",
@@ -113,7 +109,7 @@ const getters = {
 	},
 	
 	conversionMatrix: (state) => (searchName) =>{
-		return state.conversionMatrix.find(list => conversionMatrix.name === searchName);
+		return state.conversionMatrix[searchName];
 	},
 }
 

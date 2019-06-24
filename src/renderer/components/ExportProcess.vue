@@ -28,6 +28,9 @@ const path = require('path');
 const libxmljs = require("libxmljs");
 const util = require('util');
 const async = require('async');
+const sync = require('sync');
+const find = require('find');
+const escapeRegExp = require('lodash.escaperegexp');
 
 export default {
   name: "ExportList",
@@ -59,7 +62,7 @@ export default {
 			pctComplete: 0,
 			filesTotal: 0,
 			filesComplete: 0,
-			exportData: this.$store.getters.conversionMatrix[this.$store.exportStructure],
+			exportData: this.$store.getters.conversionMatrix(this.$store.getters.exportStructure),
 
 			navigation: {
 				left: [{id: 100, text:"Start Over", link:"Welcome", icon:"angle-double-left", show:true},{id: 200, text:"Go Back", link:"FilePaths", icon:"angle-left", show:true}],
@@ -81,7 +84,7 @@ export default {
 			})
 		},
 
-		processPlatform: async function(platformXML, platformName){
+		processPlatform: function(platformXML, platformName){
 			var me = this;
 
 			//Convert this path to whatever schema we're actually exporting to.
@@ -92,7 +95,7 @@ export default {
 			var exportMetadataFilename = exportLocation+"/"+this.$store.getters.exportMetadataFilename
 			
 			//Make Metadata file
-			if (this.$store.setExportMetadata == true){
+			if (this.$store.getters.exportMetadata == true){
 				fs.writeFile(exportMetadataFilename, "", function(err){
 					if (err) throw err;
 				})
@@ -102,145 +105,181 @@ export default {
 				me.platformStatus = platformName
 				var platformXMLObj = libxmljs.parseXml(platformData.toString(), {noBlanks: true});
 				var games = platformXMLObj.find("//Favorite[text()='true']")
-				
-				//Write opening tags
-				if (this.$store.setExportMetadata == true){
-					fs.appendFile(gameData.exportMetadataFilename, me.exportData.metadata.header, function(err){
-						if (err) throw err;
-						console.log("MetaData header saved", exportXML)
-					})
-				}
 
-				//Process each game
-				async.eachSeries(games, function(game, callback){
-					var gameXML = libxmljs.parseXml(game.parent().toString(), {noBlanks: true}),
-						gamePath = gameXML.get('//ApplicationPath').text().toString(),
-						gameName = gameXML.get('//Title').text().toString(),
-						romPath = path.resolve(this.$store.getters.filePath, gamePath),
-						fileName = path.basename(romPath),
-						exportMediaLocation = this.$store.getters.exportMediaLocation
+				async.waterfall([
+					function(callback){
+						//Write opening tags
+						if (me.$store.getters.exportMetadata == true){
+							fs.writeFileSync(exportMetadataFilename, me.exportData.metadata.header, function(err){
+								if (err) throw err;
+							})
+						}
 
-					var gameData = {
-						"gamePath":gamePath,
-						"gameName":gameName,
-						"gameXML":gameXML,
-						"gamePlatform":platformName,
-						"exportLocation":exportLocation,
-						"exportMetadataFilename":exportMetadataFilename,
-						"romPath":romPath,
-						"fileName":fileName,
-						"exportMediaLocation":exportMediaLocation,
-						"exportString":""
-					}
+						callback(null)
+					},
 
-					me.processFile(gameData);
+					function(callback){
+						//Process each game
+						async.eachSeries(games, function(game, gameCallback){
+							var gameXML = libxmljs.parseXml(game.parent().toString(), {noBlanks: true}),
+								gamePath = gameXML.get('//ApplicationPath').text().toString().replace(/\\/g, '/'),
+								gameName = gameXML.get('//Title').text().toString(),
+								romPath = path.resolve(me.$store.getters.filePath, gamePath),
+								fileName = path.basename(path.resolve(me.$store.getters.filePath, gamePath)),
+								exportMediaLocation = path.resolve(exportLocation, me.$store.getters.exportMediaLocation)
 
-					callback();
-				});
+							var gameData = {
+								"gamePath":gamePath,
+								"gameName":gameName,
+								"gameXML":gameXML,
+								"gamePlatform":platformName,
+								"exportLocation":exportLocation,
+								"exportMetadataFilename":exportMetadataFilename,
+								"romPath":romPath,
+								"fileName":fileName,
+								"exportMediaLocation":exportMediaLocation,
+								"exportString":""
+							}
 
+							me.processFile(gameData);
 
-				//Write closing tags
-				if (this.$store.setExportMetadata == true){
-					fs.appendFile(gameData.exportMetadataFilename, me.exportData.metadata.footer, function(err){
-						if (err) throw err;
-						console.log("MetaData footer saved", exportXML)
-					})
-				}
+							gameCallback(null);
+						});
+					callback(null)
+					},
+
+					function(callback){
+						//Write closing tags
+						if (me.$store.getters.exportMetadata == true){
+							fs.appendFileSync(exportMetadataFilename, me.exportData.metadata.footer, function(err){
+								if (err) throw err;
+							})
+						}
+						callback(null);
+					},
+				],
+			function(err, data){
+				console.warn("done?")
+			})
 			})
 		},
 
-		processFile: async function(gameData){
+		processFile: function(gameData){
 			var me = this;
 
+			this.fileStatus = gameData.gameName;
+
+			var metadata = "";
+
+			async.waterfall([
+				function(callback){
+					callback(null, gameData,"")
+				},
+				me.processRomFile,
+				me.processImages,
+				me.processVideos,
+				me.writeMetadata
+			],
+			function(err,result){
+				me.filesComplete++;
+				me.pctComplete = (me.filesComplete / me.filesTotal) * 100
+			})
+		},
+
+		processRomFile: function(gameData, metadata, callback){
 			//copy file
-			fs.copyFile(gameData.romPath, gameData.exportLocation+"/"+gameData.fileName, (err) => {
+			fs.copyFileSync(gameData.romPath, gameData.exportLocation+"/"+gameData.fileName, (err) => {
 				if (err) throw err;
 			});
 
-			//copy metadata
-			if (this.$store.setExportMetadata == true) gameData = this.processMetadata(gameData);
-			
-			//copy media
-			if (this.$store.setExportImages == true) gameData = this.processImages(gameData);
-			if (this.$store.setExportVideos == true) gameData = this.processVideos(gameData);
-
-			//write metadata
-			if (this.$store.setExportMetadata == true) this.writeMetadata(gameData);
-
-			this.filesComplete++;
-			this.pctComplete = (this.filesComplete / this.filesTotal) * 100
+			callback(null, gameData, metadata)
 		},
 
-		processMetadata: async function(gameData){
-			//var exportXML = gameData.gameXML.get('//Title').text().toString();
-			var me = this;
-			var conversionSettings = exportData.metadata;
+		processImages: function(gameData, metadata, callback){
+			var me = this; 
 
-			var exportString = "";
-
-			//Write all elements from metadata element from conversionMatrix
-			for (var node in this.exportData.metadata.elements){
-				exportString += "<"+node+">";
-				exportString += this.exportData.metadata.elements[node];
-				exportString += "</"+node+">";
-			}
-
-			gameData.exportString += exportString;
-			return gameData;
-		},
-
-		processImages: async function(gameData){
-			
 			var regions = this.$store.getters.exportPreferredRegion;
+			var exportString = "";
 
 			//Check image types
 			var imageTypes = "";
-			if (exportData.media[gameData.platformName].length > -1){
-				imageTypes = exportData.media[gameData.platformName];
+
+			if (me.exportData.media.hasOwnProperty(gameData.gamePlatform)){
+				imageTypes = me.exportData.media[gameData.gamePlatform];
 			}else{
-				imageTypes = exportData.media["default"];
+				imageTypes = me.exportData.media["default"];
 			}
 
-			for (var imgType in imageTypes){
-				/*"default":{
-					"image":"Box - Front", 
-					"marquee":"Clear Logo"
-					key - imgType 
-					value - imageTypes[imgType]
-				}, */
-
+			//make sure directory exists
+			fs.existsSync(gameData.exportMediaLocation) || fs.mkdirSync(gameData.exportMediaLocation);
+			
+			async.forEachOfSeries(imageTypes, function(sourceImageType, destImageType, imageCallback){
 				// get image path based on type
-				var basePath = path.resolve(this.$store.getters.filePath, "Images", gameData.platformName, imageTypes[imgType])
+				var basePath = path.resolve(me.$store.getters.filePath, "Images", gameData.gamePlatform, sourceImageType)
 
-				// loop through regions to find game name (will look like gamename-01.png or gamename-01.jpg)
+				var escapedGameName = gameData.gameName
+				var regex = new RegExp(escapedGameName+'.*', 'g');
 
-				find.file(/\.*$/, basePath, function(files) {
-					console.log(files.length, files);
-
-					fs.copyFile(files, gameData.exportLocation+"/"+gameData.exportMediaLocation+"/"+gameData.gameName+"-"+imgType, (err) => {
-						if (err) throw err;
-					});
-					// copy image to media location, adding image type indentifier: replacing -01 with -image or -marquee
-					// Add path to export string in gameData object
-				}).error(function(err) {
-					if (err) {
-						console.log(err, "Couldn't find image for ", gameData.gameName)
-					}
-				})
+				console.log(regex)
 				
-				return gameData;
+				async.waterfall([
+					function(waterfallCallback) {
+						//Find Files, pass image Location
+					
+						var files = find.fileSync(regex, basePath);
+						console.warn(files)
 
+						if (files.length > 0){
+							var extension = path.extname(files[0])
+							var newImage = gameData.exportMediaLocation+"/"+gameData.gameName+"-"+destImageType+extension;
+							var targetImage = files[0];
 
-			}
+							waterfallCallback(null, newImage, targetImage);
+						}else{
+							waterfallCallback(null, null, null)
+						}
+						
+					},
 
-			gameData.exportString += exportString;
-			return gameData;
+					function(newImage, file, waterfallCallback) {
+						//copy files, pass image location
+
+						if (file && newImage){
+							fs.copyFile(file, newImage, (err) => {
+								if (err) throw err;
+							});
+
+							waterfallCallback(null, newImage);
+						}
+						
+					},
+
+					function(newImage, waterfallCallback) {
+						//Write Metadata
+						if (newImage){
+							exportString += "<"+destImageType+">";
+							exportString += me.$store.getters.exportMediaLocation+"/"+path.basename(newImage);
+							exportString += "</"+destImageType+">";
+						}
+
+						waterfallCallback(null, 'done');
+					}
+
+				], function (err, result) {
+					imageCallback();
+				});
+				
+				
+				//callback();
+			})
+
+			metadata += exportString;
+			callback(null, gameData, metadata)
 
 		},
 
-		processVideos: async function(gameData){
-			console.log("Videos", gameData)
-
+		processVideos: function(gameData, metadata, callback){
+			//console.log("Videos", gameData)
 			/*
 				Get game name
 					Get first match, add type to end of filename
@@ -249,25 +288,39 @@ export default {
 					Add path and name to exportString for XML
 			*/
 
+
+			callback(null, gameData, metadata)
 		},
 
-		writeMetaData: function(gameData){
-
-			var exportString = "";
-
+		writeMetadata: function(gameData, metadata, callback){
 			//Write opening node
-			exportString += "<"+this.exportData.metadata.gameElement+">";
+			metadata += "<"+this.exportData.metadata.gameElement+">";
 
-			exportString += gameData.exportString;
+
+			//Write game Path
+			metadata += "<"+this.exportData.metadata.pathToRomElement+">";
+			metadata += gameData.fileName;
+			metadata += "</"+this.exportData.metadata.pathToRomElement+">";
+
+			//Write all elements from metadata element from conversionMatrix
+			for (var node in this.exportData.metadata.elements){
+				var nodeData = gameData.gameXML.get('//'+this.exportData.metadata.elements[node]).text().toString()
+
+				metadata += "<"+node+">";
+				metadata += nodeData;
+				metadata += "</"+node+">";
+			}
 
 			//close node
-			exportString += "</"+this.exportData.metadata.gameElement+">";
+			metadata += "</"+this.exportData.metadata.gameElement+">";
 
 			//write game footer
-			fs.appendFile(gameData.exportMetadataFilename, exportString , function(err){
+			fs.appendFileSync(gameData.exportMetadataFilename, metadata , function(err){
 				if (err) throw err;
-				console.log("MetaData saved", exportString)
+				console.log("MetaData saved", metadata, gameData.exportMetadataFilename)
 			})
+
+			callback(null, gameData, metadata)
 		}
 	}
 };

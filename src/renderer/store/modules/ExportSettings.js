@@ -5,7 +5,7 @@ const state = {
   exportStructure: "retropie",
   exportPreferredRegion: ["United States", "North America", "World", ""],
   exportImages: true,
-  exportVideos: true,
+  exportVideos: false,
   exportMetadata: true,
   exportMetadataFilename: "gamelist.xml",
   exportMediaLocation: "images",
