@@ -47,6 +47,7 @@ const state = {
 				"Atari 7800":"atari7800",
 				"Atari Jaguar":"atarijaguar",
 				"Atari Jaguar CD":"atarijaguarcd",
+				"Atari Lynx":"atarilynx",
 				"ColecoVision":"colecovision",
 				"Commodore Amiga":"amiga",
 				"GCE Vectrex":"vectrex",

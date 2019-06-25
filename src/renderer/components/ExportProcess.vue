@@ -60,9 +60,9 @@ export default {
 			platformStatus: "nowhere",
 			fileStatus: "nothing",
 			hasError: "",
-			pctComplete: 0,
+			pctCompleted: 0,
 			filesTotal: 0,
-			filesComplete: 0,
+			filesCompleted: 0,
 			exportData: this.$store.getters.conversionMatrix(this.$store.getters.exportStructure),
 
 			navigation: {
@@ -70,6 +70,24 @@ export default {
 				right: [{id: 3, text:"Export!", link:"ExportProcess", icon:"angle-right", show: false}]
 			}
 		}
+	},
+	computed: {
+		pctComplete: {
+			get(){
+				return this.pctCompleted
+			},
+			set(value) {
+				this.pctCompleted = value
+			}
+		},
+		filesComplete:{
+			get(){
+				return this.filesCompleted
+			},
+			set(value){
+				this.filesCompleted = value
+			}
+		},
 	},
 	methods: {
 		startExport: async function(){
@@ -87,9 +105,10 @@ export default {
 
 		processPlatform: async function(platformXML, platformName){
 			var me = this;
-
+			
 			//Convert this path to whatever schema we're actually exporting to.
-			var exportLocation = me.exportPath+"/roms/"+platformName
+			var platformFolderName = me.exportData.systems[platformName]
+			var exportLocation = me.exportPath+"/roms/"+platformFolderName
 
 			//Make dirs
 			fs.existsSync(exportLocation) || fs.mkdirSync(exportLocation);
@@ -106,7 +125,7 @@ export default {
 				me.platformStatus = platformName
 				var platformXMLObj = libxmljs.parseXml(platformData.toString(), {noBlanks: true});
 				var games = platformXMLObj.find("//Favorite[text()='true']")
-
+				
 				async.waterfall([
 					function(callback){
 						//Write opening tags
@@ -143,8 +162,10 @@ export default {
 							}
 
 							me.processFile(gameData);
-
+							//setTimeout(function(){me.processFile(gameData);},100)
+							//setTimeout(function(){console.log("waiting")},100)
 							gameCallback(null);
+							
 						});
 					callback(null)
 					},
@@ -160,12 +181,12 @@ export default {
 					},
 				],
 			function(err, data){
-				console.warn("done?")
+				console.warn("done with platform " + platformName)
 			})
 			})
 		},
 
-		processFile: function(gameData){
+		processFile: async function(gameData){
 			var me = this;
 
 			this.fileStatus = gameData.gameName;
@@ -182,8 +203,9 @@ export default {
 				me.writeMetadata
 			],
 			function(err,result){
-				me.filesComplete++;
-				me.pctComplete = (me.filesComplete / me.filesTotal) * 100
+					me.filesComplete++;
+					me.pctComplete = (me.filesComplete / me.filesTotal) * 100
+					console.log(me.pctComplete, me.filesComplete)				
 			})
 		},
 
@@ -221,8 +243,6 @@ export default {
 				//var escapedGameName = gameData.gameName.replace("'",".")
 				var escapedGameName = gameData.gameName.replace(/([^A-Za-z0-9])/giu, ".");
 				var regex = new RegExp("("+escapedGameName+").*", "giu");
-				
-				console.log(regex)
 
 				async.waterfall([
 					function(waterfallCallback) {
@@ -231,11 +251,12 @@ export default {
 
 						if (files.length > 0){
 							var extension = path.extname(files[0])
-							var newImage = gameData.exportMediaLocation+"/"+gameData.gameName+"-"+destImageType+extension;
+							var newImage = gameData.exportMediaLocation+"/"+escapedGameName+"-"+destImageType+extension;
 							var targetImage = files[0];
 
 							waterfallCallback(null, newImage, targetImage);
 						}else{
+							console.warn("Couldn't find anything for ", gameData.gameName, files, regex)
 							waterfallCallback(null, null, null)
 						}
 						
@@ -250,6 +271,8 @@ export default {
 							});
 
 							waterfallCallback(null, newImage);
+						}else{
+							waterfallCallback(null, null);
 						}
 						
 					},
@@ -258,7 +281,7 @@ export default {
 						//Write Metadata
 						if (newImage){
 							exportString += "<"+destImageType+">";
-							exportString += me.$store.getters.exportMediaLocation+"/"+path.basename(newImage);
+							exportString += "./"+me.$store.getters.exportMediaLocation+"/"+path.basename(newImage);
 							exportString += "</"+destImageType+">";
 						}
 
@@ -292,35 +315,46 @@ export default {
 			callback(null, gameData, metadata)
 		},
 
-		writeMetadata: function(gameData, metadata, callback){
+		writeMetadata: function(gameData, metadataIn, callback){
 			//Write opening node
-			metadata += "<"+this.exportData.metadata.gameElement+">";
+			var metadataOut = "<"+this.exportData.metadata.gameElement+">";
 
 
 			//Write game Path
-			metadata += "<"+this.exportData.metadata.pathToRomElement+">";
-			metadata += gameData.fileName;
-			metadata += "</"+this.exportData.metadata.pathToRomElement+">";
+			metadataOut += "<"+this.exportData.metadata.pathToRomElement+">";
+			metadataOut += "./"+gameData.fileName;
+			metadataOut += "</"+this.exportData.metadata.pathToRomElement+">";
 
 			//Write all elements from metadata element from conversionMatrix
 			for (var node in this.exportData.metadata.elements){
-				var nodeData = gameData.gameXML.get('//'+this.exportData.metadata.elements[node]).text().toString()
 
-				metadata += "<"+node+">";
-				metadata += nodeData;
-				metadata += "</"+node+">";
+				var data = gameData.gameXML.get('//'+this.exportData.metadata.elements[node])
+
+				if(data){
+					var nodeData = data.text().toString()
+
+					metadataOut += "<"+node+">";
+					metadataOut += nodeData;
+					metadataOut += "</"+node+">";
+				}else{
+					//console.warn("no data for ", node, gameData.gameName)
+				}
+				
 			}
+			
+			//Add in any metadata from previous steps
+			metadataOut += metadataIn;
 
 			//close node
-			metadata += "</"+this.exportData.metadata.gameElement+">";
+			metadataOut += "</"+this.exportData.metadata.gameElement+">";
 
 			//write game footer
-			fs.appendFileSync(gameData.exportMetadataFilename, metadata , function(err){
+			fs.appendFileSync(gameData.exportMetadataFilename, metadataOut , function(err){
 				if (err) throw err;
-				console.log("MetaData saved", metadata, gameData.exportMetadataFilename)
+				//console.log("MetaData saved", metadatOut, gameData.exportMetadataFilename)
 			})
 
-			callback(null, gameData, metadata)
+			callback(null, gameData, metadataOut)
 		}
 	}
 };

@@ -23,16 +23,14 @@ Man, that sucks. Sorry to hear that. As far as I know, I'm a human, so this isn'
 Here's my to-do list. I'm working on these things. Please don't bug me about when these get done or to prioritize something over something else. It takes me long enough to pop the clutch to get my ass in gear as it is - please don't add some kind of social obligation to this on top of it.
 
 * Set export type (USB Stick/Friendly Naming, RetroPie Naming, etc)
-* Generate conversion mapping for RetroPie
 * Set media export type/settings (Export Videos, Images, Metadata)
 * Image export preferred region
-* Export Process:
-  * Generate Metadata, generate new file
-  * Copy media
 * Make a nice logo
 * Clean up DOM/CSS to make it look cooler
 * Page transitions
 * Better headers
+* Downsample Images and Videos
+* Friendlier sync processing so that animations actually work
 
 ## I want to build this thing myself because I'm like a nerd version of Bob Vila
 
