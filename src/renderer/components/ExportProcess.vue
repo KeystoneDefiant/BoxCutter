@@ -30,7 +30,6 @@ const util = require('util');
 const async = require('async');
 const sync = require('sync');
 const find = require('find');
-const escapeRegExp = require('lodash.escaperegexp');
 
 export default {
   name: "ExportList",
@@ -266,6 +265,8 @@ export default {
 						//copy files, pass image location
 
 						if (file && newImage){
+
+							//Process image with Sharp  https://sharp.pixelplumbing.com/en/stable/install/
 							fs.copyFile(file, newImage, (err) => {
 								if (err) throw err;
 							});
