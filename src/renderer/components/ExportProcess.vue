@@ -30,6 +30,7 @@ const util = require('util');
 const async = require('async');
 const sync = require('sync');
 const find = require('find');
+const sharp = require('sharp');
 
 export default {
   name: "ExportList",
@@ -267,11 +268,18 @@ export default {
 						if (file && newImage){
 
 							//Process image with Sharp  https://sharp.pixelplumbing.com/en/stable/install/
-							fs.copyFile(file, newImage, (err) => {
-								if (err) throw err;
-							});
+							// fs.copyFile(file, newImage, (err) => {
+							// 	if (err) throw err;
+							// });
 
-							waterfallCallback(null, newImage);
+							sharp(file)
+								.resize({
+									width: 300
+								})
+								.toFile(newImage, function(info){
+									
+								})
+								waterfallCallback(null, newImage);
 						}else{
 							waterfallCallback(null, null);
 						}
