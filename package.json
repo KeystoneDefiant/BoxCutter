@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "animate.css": "^3.7.0",
-    "buefy": "^0.6.7",
+    "buefy": "^0.7.2",
     "es6-promise": "^4.2.5",
     "vue": "^2.5.17",
     "vue2-animate": "^2.1.0",
